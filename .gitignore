@@ -1,0 +1,8 @@
+.idea
+.idea/*
+composer.phar
+!/app/vendor/squizlabs/php_codesniffer/CodeSniffer.conf
+/app/vendor/*
+/app/composer.lock
+app/
+bckp/
