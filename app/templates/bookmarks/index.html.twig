@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.bookmarks_list'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h1>
+        {{ 'title.bookmarks_list'|trans }}    </h1>
+    {% if bookmarks|length %}
+        <ul>
+            {% for row in bookmarks %}
+
+            <a href="{{ url('bookmarks_view', {'id': row.id}) }}" title="{{ 'label.view'|trans }}">
+                <li>{{ row.title }}, {{ row.url }}</li>
+
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div>
+            {{ 'errors.empty_list'|trans }}
+        </div>
+    {% endif %}
+{% endblock %}

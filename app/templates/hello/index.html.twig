@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} ... {% endblock title %}
+
+{%  block body %}
+<h1>
+    Hello {{ name|default('World') }}!
+</h1>
+{% endblock %}
+
