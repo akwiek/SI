@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'title.bookmark_delete'|trans({'%id%': tag.id}) }}{% endblock %}
+{% block title %}{{ 'title.bookmark_delete'|trans({'%id%': bookmark.id}) }}{% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.bookmark_delete'|trans({'%id%': tag.id}) }}</h1>
-    {{ form_start(form, { method: 'post', action: url('bookmarks_delete', {'id': tag.id}) }) }}
+    <h1>{{ 'title.bookmark_delete'|trans({'%id%': bookmark.id}) }}</h1>
+    {{ form_start(form, { method: 'post', action: url('bookmarks_delete', {'id': bookmark.id}) }) }}
     {{ form_widget(form) }}
     <input type="submit" value="{{ 'action.delete'|trans }}" class="btn btn-success" />
     {{ form_end(form) }}

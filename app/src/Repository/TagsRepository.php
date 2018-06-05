@@ -74,6 +74,37 @@ class TagsRepository
             ->from('si_tags', 't');
     }
     /**
+     * Find one record by name.
+     *
+     * @param string $name Name
+     *
+     * @return array|mixed Result
+     */
+    public function findOneByName($name)
+    {
+        $queryBuilder = $this->queryAll();
+        $queryBuilder->where('t.name = :name')
+            ->setParameter(':name', $name, \PDO::PARAM_STR);
+        $result = $queryBuilder->execute()->fetch();
+
+        return !$result ? [] : $result;
+    }
+    /**
+     * Find tags by Ids.
+     *
+     * @param array $ids Tags Ids.
+     *
+     * @return array
+     */
+    public function findById($ids)
+    {
+        $queryBuilder = $this->queryAll();
+        $queryBuilder->where('t.id IN (:ids)')
+            ->setParameter(':ids', $ids, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY);
+
+        return $queryBuilder->execute()->fetchAll();
+    }
+    /**
      * Get records paginated.
      *
      * @param int $page Current page number
@@ -132,7 +163,10 @@ class TagsRepository
             return $this->db->update('si_tags', $tag, ['id' => $id]);
         } else {
             // add new record
-            return $this->db->insert('si_tags', $tag);
+            $this->db->insert('si_tags', $tag);
+            $tag['id'] = $this->db->lastInsertId();
+
+            return $tag;
         }
     }
 }

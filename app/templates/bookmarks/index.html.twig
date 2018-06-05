@@ -7,9 +7,9 @@
 {% block body %}
     <h1>
         {{ 'title.bookmarks_list'|trans }}    </h1>
-    {% if bookmarks|length %}
+    {% if paginator.data|length %}
         <ul>
-            {% for row in bookmarks %}
+            {% for row in paginator.data %}
 
             <a href="{{ url('bookmarks_view', {'id': row.id}) }}" title="{{ 'label.view'|trans }}">
                 <li>{{ row.title }}, {{ row.url }}</li>

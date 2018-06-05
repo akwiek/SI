@@ -8,9 +8,12 @@ namespace Controller;
 use Model\Bookmarks;
 use Form\BookmarkType;
 use Repository\BookmarksRepository;
+use Repository\TagsRepository;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Class BookmarksController.
@@ -70,8 +73,15 @@ class BookmarksController implements ControllerProviderInterface
     {
         $bookmark = [];
 
-        $form = $app['form.factory']->createBuilder(BookmarkType::class, $bookmark)->getForm();
+        $form = $app['form.factory']->createBuilder(
+            BookmarkType::class,
+            $bookmark,
+            ['tags_repository' => new TagsRepository($app['db'])]
+        )->getForm();
+
         $form->handleRequest($request);
+
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $bookmark = $form->getData();
@@ -79,6 +89,8 @@ class BookmarksController implements ControllerProviderInterface
             $bookmarksRepository -> save($bookmark);
             dump($bookmark);
         }
+
+
 
         return $app['twig']->render(
             'bookmarks/add.html.twig',
@@ -103,6 +115,8 @@ class BookmarksController implements ControllerProviderInterface
         $tagsRepository = new BookmarksRepository($app['db']);
         $tag = $tagsRepository->findOneById($id);
 
+
+
         if (!$tag) {
             $app['session']->getFlashBag()->add(
                 'messages',
@@ -115,7 +129,11 @@ class BookmarksController implements ControllerProviderInterface
             return $app->redirect($app['url_generator']->generate('tags_index'));
         }
 
-        $form = $app['form.factory']->createBuilder(BookmarkType::class, $tag)->getForm();
+        $form = $app['form.factory']->createBuilder(
+            BookmarkType::class,
+            $bookmark,
+            ['tags_repository' => new TagsRepository($app['db'])]
+        )->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -131,6 +149,7 @@ class BookmarksController implements ControllerProviderInterface
 
             return $app->redirect($app['url_generator']->generate('tags_index'), 301);
         }
+
 
         return $app['twig']->render(
             'tags/edit.html.twig',
@@ -174,7 +193,7 @@ class BookmarksController implements ControllerProviderInterface
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $tagsRepository->delete($form->getData());
+            $bookmarksRepository->delete($form->getData());
 
             $app['session']->getFlashBag()->add(
                 'messages',
